@@ -1,37 +1,41 @@
-import js from '@eslint/js'
+import { defineConfig, globalIgnores } from '@eslint/config'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules']),
+  globalIgnores([
+    {
+      path: 'dist',
+      glob: '**/*',
+    },
+    {
+      path: 'node_modules',
+      glob: '**/*',
+    },
+  ]),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
-      js.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
+      'plugin:react-hooks/recommended',
+      'plugin:react-refresh/recommended',
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
         ...globals.browser,
-        ...globals.node, // This helps recognize Node.js globals
+        ...globals.node,
       },
       parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
+        ecmaVersion: 2020,
       },
     },
     rules: {
-      // These three lines turn off the "Red Line" warnings
-      'no-unused-vars': 'off',
-      'no-undef': 'off',
-      'react/prop-types': 'off',
+      'no-unused-vars': 'error',
+      'no-undef': 'error',
+      'react/prop-types': 'error',
       'react-refresh/only-export-components': [
-        'warn',
+        'error',
         { allowConstantExport: true },
       ],
     },
